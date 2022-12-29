@@ -55,6 +55,7 @@ class Bd {
                 continue
             }
 
+            despesa.id = i
             despesas.push(despesa)
         }
         return despesas
@@ -90,6 +91,9 @@ class Bd {
             despesasFiltradas = despesasFiltradas.filter(d => d.valor == despesa.valor)
         }
         return despesasFiltradas
+    }
+    remover(id) {
+        localStorage.removeItem(id)
     }
 }
 
@@ -148,15 +152,15 @@ function cadastrarDespesa() {
 
         $('#modalRegistraDespesa').modal('show')
 
-    }   
+    }
 
 
 }
 
 function carregaListaDespesas(despesas = Array(), filtro = false) {
 
-    if(despesas.length == 0 && filtro == false) {
-         despesas = bd.recuperarTodosRegistros()
+    if (despesas.length == 0 && filtro == false) {
+        despesas = bd.recuperarTodosRegistros()
     }
 
     let listaDespesas = document.getElementById('listaDespesas')
@@ -187,6 +191,25 @@ function carregaListaDespesas(despesas = Array(), filtro = false) {
         linha.insertCell(2).innerHTML = d.descricao
         linha.insertCell(3).innerHTML = d.valor
 
+        let btn = document.createElement("button")
+        btn.className = 'btn btn-danger'
+        btn.innerHTML = '<i class="fa fa-times"></i>'
+        btn.id = `id_despesa_${d.id}`
+        btn.onclick = function () {
+
+            let id = this.id.replace('id_despesa_', '')
+
+            bd.remover(id)
+
+            window.location.reload()
+
+        }
+
+        linha.insertCell(4).append(btn)
+
+        console.log(d)
+
+
     })
 
 }
@@ -204,7 +227,7 @@ function pesquisarDespesa() {
     let despesas = bd.pesquisar(despesa)
 
     this.carregaListaDespesas(despesas, true)
-    
+
 }
 
 
