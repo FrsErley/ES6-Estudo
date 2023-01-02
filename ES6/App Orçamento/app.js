@@ -152,6 +152,7 @@ function cadastrarDespesa() {
 
         $('#modalRegistraDespesa').modal('show')
 
+
     }
 
 
@@ -201,8 +202,20 @@ function carregaListaDespesas(despesas = Array(), filtro = false) {
 
             bd.remover(id)
 
-            window.location.reload()
+            document.getElementById('modal_titulo').innerHTML = 'Deletado com sucesso!'
+            document.getElementById('modal_titulo_div').className = 'modal-header text-danger'
+            document.getElementById('modal_conteudo').innerHTML = 'Existem campos obrigatórios que não foram preenchidos'
+            document.getElementById('modal_btn').innerHTML = 'Voltar e corrigir'
+            document.getElementById('modal_btn').className = "btn btn-danger"
+            
+            $('#modalRemoveDespesa').modal('show')
+            
 
+            let jquery = $('#modalRemoveDespesa').modal('show').event
+            console.log(jquery)
+            if ( $('#modalRemoveDespesa').modal('show').event ) {
+                window.location.reload()
+            }
         }
 
         linha.insertCell(4).append(btn)
