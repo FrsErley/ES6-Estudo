@@ -1,12 +1,12 @@
 class User {
 
-    constructor(name, gender, birth, coutry, email, password, photo, admin) {
+    constructor(name, gender, birth, country, email, password, photo, admin) {
 
 
         this._name = name;
         this._gender = gender;
         this._birth = birth;
-        this._coutry = coutry;
+        this._country = country;
         this._email = email;
         this._password = password;
         this._photo = photo;
