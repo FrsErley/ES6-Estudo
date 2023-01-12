@@ -54,15 +54,17 @@ class UserController {
 
                     user.loadFromJSON(result)
 
+                    user.save();
+
                     this.getTr(user, tr)
 
                     this.updateCount();
 
                     this.formUpdateEl.reset();
 
-                    btn.disabled = false;
-
                     this.showPanelCreate();
+
+                    btn.disabled = false;
 
                 },
                 (e) => {
@@ -94,7 +96,7 @@ class UserController {
 
                     values.photo = content;
 
-                    this.insert(values);
+                    values.save();
 
                     this.addLine(values);
 
@@ -163,20 +165,20 @@ class UserController {
 
             if (['name', 'email', 'password'].indexOf(field.name) > -1 && !field.value) {
 
-                field.parentElement.classList.add('has-error');
+                field.parentElement.classList.add("has-error");
                 isValid = false;
 
             }
 
-            if (field.name == "gender") {
+            if (field.name === "gender") {
 
                 if (field.checked)
 
                     user[field.name] = field.value
 
-            } else if (field.name === "admin") {
+            } else if (field.name == "admin") {
 
-                user[field.name] = field.checked
+                user[field.name] = field.checked;
 
             }
 
@@ -209,23 +211,9 @@ class UserController {
 
     }
 
-    getUsersStorage() {
-
-        let users = [];
-
-        if (localStorage.getItem("users")) {
-
-            users = JSON.parse(localStorage.getItem("users"))
-
-        }
-
-        return users;
-
-    }
-
     selectAll() {
 
-        let users = this.getUsersStorage();
+        let users = User.getUsersStorage();
 
         users.forEach(dataUser => {
 
@@ -235,21 +223,11 @@ class UserController {
 
             this.addLine(user);
 
-        });
+        })
 
 
     }
 
-    insert(data) {
-
-        let users = this.getUsersStorage();
-
-        users.push(data);
-
-        localStorage.setItem("users", JSON.stringify(users))
-        // sessionStorage.setItem("user", JSON.stringify(users))
-        
-    }
 
     addLine(dataUser) {
 
@@ -287,11 +265,16 @@ class UserController {
     }
 
     addEventsTr(tr) {
-        console.log(tr);
 
         tr.querySelector(".btn-delete").addEventListener("click", e => {
 
             if (confirm("Deseja realmente excluir ?")) {
+
+                let user = new User();
+
+                user.loadFromJSON(JSON.parse(tr.dataset.user));
+
+                user.remove();
 
                 tr.remove();
 
@@ -309,7 +292,7 @@ class UserController {
 
             for (let name in json) {
 
-                let field = this.formUpdateEl.querySelector("[name=" + name.replace("_", " ") + "]")
+                let field = this.formUpdateEl.querySelector("[name=" + name.replace("_", "") + "]")
 
                 if (field) {
 
